@@ -1,11 +1,11 @@
-CXX = g++
-CXXFLAGS = -std=c++11 -g
+CC = gcc
+CFLAGS = -g
 
-dp: main.o TransducerBuffer.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
+dp: main.o
+	$(CC) $(CFLAGS) $^ -o $@
 
-main.o: TransducerBuffer.h
-TransducerBuffer.o: TransducerBuffer.h
+main.o: main.c
+	$(CC) -c $(CFLAGS) main.c
 
 .PHONY: clean
 clean:
