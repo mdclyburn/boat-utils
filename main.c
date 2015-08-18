@@ -31,6 +31,15 @@ int main(int argc, char** args)
 	else
 		fprintf(log_file, "NEW SESSION @ %lu\n", time(NULL));
 
+	// open device file
+	FILE* const transducer = fopen(args[1], "r");
+	if(transducer == NULL)
+	{
+	    printf("Failed to open transducer device file.\n");
+	    printf("Please ensure that it is actually \'%s\'.\n", args[1]);
+	    return 1;
+	}
+
 	// main loop
 	// simply read from the sensor and log when necessary
 	// add proper response to SIGINT
@@ -40,6 +49,8 @@ int main(int argc, char** args)
 
 	if(fclose(log_file) == EOF)
 		printf("There was a problem properly closing the log file.\n");
+	if(fclose(transducer) == EOF)
+	    printf("There was a problem properly closing the device file.\n");
 
 	return 0;
 }
