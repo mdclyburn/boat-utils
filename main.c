@@ -57,8 +57,20 @@ int main(int argc, char** args)
 	// main loop
 	// simply read from the sensor and log when necessary
 	// add proper response to SIGINT
+	char buffer[50];
 	while(running)
 	{
+	    const int read = fscanf(transducer, "%s", buffer);
+	    if(read == EOF) continue;
+
+	    // use only depth readings ('$SDDBT...')
+	    if(buffer[4] != 'B') continue;
+
+	    // write out reading to log
+	    fprintf(log_file, "%lu ", time(NULL));
+	    for(unsigned int i = 7; buffer[i] != ','; i++)
+		fprintf(log_file, "%c", buffer[i]);
+	    fprintf(log_file, "\n");
 	}
 
 	printf("\nStopping.\n");
