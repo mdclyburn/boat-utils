@@ -1,6 +1,13 @@
+#include <assert.h>
+#include <stdbool.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+bool running = true;
+
+void interrupt_handler(int signal);
 
 int main(int argc, char** args)
 {
@@ -40,17 +47,32 @@ int main(int argc, char** args)
 	    return 1;
 	}
 
+	// signal handling
+	struct sigaction sa_spec;
+	sa_spec.sa_handler = interrupt_handler;
+	sa_spec.sa_flags = 0;
+	sigfillset(&sa_spec.sa_mask);
+	assert(sigaction(SIGINT, &sa_spec, 0) == 0);
+
 	// main loop
 	// simply read from the sensor and log when necessary
 	// add proper response to SIGINT
-//	for(;;)
-//	{
-//	}
+	while(running)
+	{
+	}
 
+	printf("\nStopping.\n");
 	if(fclose(log_file) == EOF)
 		printf("There was a problem properly closing the log file.\n");
 	if(fclose(transducer) == EOF)
 	    printf("There was a problem properly closing the device file.\n");
 
 	return 0;
+}
+
+void interrupt_handler(int signal)
+{
+    if(signal == SIGTERM || signal == SIGABRT || signal == SIGINT)
+	running = false;
+    return;
 }
