@@ -11,6 +11,7 @@ while (<TRANSDUCER>) {
 	if (/^\$SDDBT/) {
 		($depth_ft) = $_ =~ /(\d+\.\d),f/;
 		($depth_m)  = $_ =~ /(\d+\.\d),M/;
+		$depth_ft = $depth_m = "" if ! defined $depth_ft;
 		write;
 	}
 }
