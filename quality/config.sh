@@ -17,6 +17,7 @@ then
 	exit 1
 fi
 
+device="${1}"
 baud_rate="19200"
 
 printf "Configuring %s...\n" "${device}"
