@@ -1,8 +1,32 @@
 #!/usr/bin/perl -w
 
-die "Usage: dp.pl <device>\n" if @ARGV < 1;
+use Getopt::Std;
 
-open(TRANSDUCER, "<", $ARGV[0]) || die "Failed to open $ARGV[0].\n";
+# Switches
+#
+# -s        - Silences pretty output to the terminal.
+# -o <file> - Send raw data to the file specified.
+#
+getopts('so:');
+
+print "s: $opt_s\n" if (defined $opt_s);
+print "o: $opt_o\n" if (defined $opt_o);
+
+if(defined $opt_o) {
+	open(LOGFILE, ">>", $opt_o) || die "Failed to open file to log to: $opt_o.\n";
+}
+
+open(TRANSDUCER, "<", $ARGV[-1]) || die "Failed to open $ARGV[0].\n";
+
+# Define interrupt signal handler.
+$SIG{INT} = sub {
+	if(defined $opt_o) {
+		close(LOGFILE) || warn "Failed to close log file.\n";
+	}
+
+	print "Exiting...\n";
+	exit 0;
+};
 
 $depth_ft = 0;
 $depth_m = 0;
@@ -12,7 +36,13 @@ while (<TRANSDUCER>) {
 		($depth_ft) = $_ =~ /(\d+\.\d),f/;
 		($depth_m)  = $_ =~ /(\d+\.\d),M/;
 		$depth_ft = $depth_m = "-" if ! defined $depth_ft;
-		write;
+
+		if(!defined $opt_s) {
+			write;
+		}
+		if(defined $opt_o) {
+			print LOGFILE time() . " $depth_ft $depth_m\n";
+		}
 	}
 }
 
