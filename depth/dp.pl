@@ -19,7 +19,7 @@ if(defined $opt_o) {
 open(TRANSDUCER, "<", $ARGV[-1]) || die "Failed to open $ARGV[0].\n";
 
 # Define interrupt signal handler.
-$SIG{INT} = sub {
+$SIG{INT} = $SIG{TERM} = sub {
 	if(defined $opt_o) {
 		close(LOGFILE) || warn "Failed to close log file.\n";
 	}
