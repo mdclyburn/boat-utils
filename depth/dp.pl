@@ -7,9 +7,19 @@ use Getopt::Std;
 # -s        - Silences pretty output to the terminal.
 # -o <file> - Send raw data to the file specified.
 #
-getopts('so:');
+getopts('hso:');
 
-if(defined $opt_o) {
+# Print help information and exit.
+if (defined $opt_h) {
+	print "Usage: dp.pl [-hs] [-o file] device\n\n";
+	print "  Options\n" .
+		"  h - print help information and exit\n" .
+		"  s - suppress output to terminal\n\n" .
+		"  o file - send raw, extracted data to the specified file\n\n";
+	exit 0;
+}
+
+if (defined $opt_o) {
 	open(LOGFILE, ">>", $opt_o) || die "Failed to open file to log to: $opt_o.\n";
 }
 
@@ -36,12 +46,12 @@ while (<TRANSDUCER>) {
 		$depth_ft = $depth_m = "-" if ! defined $depth_ft;
 
 		# Send data to terminal if we're not suppressing output.
-		if(!defined $opt_s) {
+		if (!defined $opt_s) {
 			write;
 		}
 
 		# Write raw data to the specified file if desired.
-		if(defined $opt_o) {
+		if (defined $opt_o) {
 			print LOGFILE time() . " $depth_ft $depth_m\n";
 		}
 	}
