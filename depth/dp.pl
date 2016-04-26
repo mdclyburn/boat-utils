@@ -9,9 +9,6 @@ use Getopt::Std;
 #
 getopts('so:');
 
-print "s: $opt_s\n" if (defined $opt_s);
-print "o: $opt_o\n" if (defined $opt_o);
-
 if(defined $opt_o) {
 	open(LOGFILE, ">>", $opt_o) || die "Failed to open file to log to: $opt_o.\n";
 }
