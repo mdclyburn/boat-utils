@@ -1,9 +1,6 @@
-Depth Parser
-============
-Processing data from the RadarSonics depth transducer.
+# Boat Utilities
+Tools for accepting and processing data from onboard sensors.
 
-License
-=======
+## License
 Under the MIT License.
 See LICENSE for more information.
-
