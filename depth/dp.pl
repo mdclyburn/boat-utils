@@ -33,13 +33,17 @@ $depth_m = 0;
 
 while (<TRANSDUCER>) {
 	if (/^\$SDDBT/) {
+		# Capture data from the device.
 		($depth_ft) = $_ =~ /(\d+\.\d),f/;
 		($depth_m)  = $_ =~ /(\d+\.\d),M/;
 		$depth_ft = $depth_m = "-" if ! defined $depth_ft;
 
+		# Send data to terminal if we're not suppressing output.
 		if(!defined $opt_s) {
 			write;
 		}
+
+		# Write raw data to the specified file if desired.
 		if(defined $opt_o) {
 			print LOGFILE time() . " $depth_ft $depth_m\n";
 		}
